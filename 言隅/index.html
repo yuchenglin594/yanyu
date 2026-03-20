@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="言隅-基于AI声音复刻的沉浸式方言文创IP，语言的故乡，珍藏乡音的角落">
+    <meta name="keywords" content="言隅,方言文创,AI声音复刻,长沙文旅,湘方言保护,NFC文创,非遗活化">
+    <link rel="icon" href="./imgs/logo.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="./imgs/logo.jpg">
+    <title>言隅 | 语言的故乡 · 珍藏乡音的角落</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 引入Tailwind配置脚本（保留在html中，不可抽离） -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 全局基础色
+                        dark: '#3D405B',
+                        light: '#F8F9FA',
+                        
+                        // 【定制渐变体系】云朵白 → 暖金黄 → 薄荷绿 → 天空蓝 → 薰衣草紫
+                        // 1. 首页 - 云朵白（渐变起点）
+                        home: {
+                            primary: '#F8FAFC',  // 云朵白
+                            secondary: '#FFFFFF', // 纯白
+                            bg: '#F8FAFC',        // 云朵白背景
+                            accent: '#E2E8F0'     // 浅灰
+                        },
+                        // 2. 简介 - 暖金黄（渐变过渡1）
+                        intro: {
+                            primary: '#FFB703',  // 暖金黄
+                            secondary: '#FFF8E1', // 浅黄白
+                            bg: '#FFFDE7',        // 极浅黄
+                            accent: '#FB8500'     // 深橙
+                        },
+                        // 3. 展示 - 薄荷绿（渐变过渡2）
+                        show: {
+                            primary: '#4CAF50',  // 薄荷绿
+                            secondary: '#E8F5E9', // 浅绿白
+                            bg: '#F0F9F4',        // 极浅绿
+                            accent: '#2E7D32'     // 深绿
+                        },
+                        // 4. 项目 - 天空蓝（渐变过渡3）
+                        project: {
+                            primary: '#2196F3',  // 天空蓝
+                            secondary: '#E3F2FD', // 浅蓝白
+                            bg: '#F5FAFF',        // 极浅蓝
+                            accent: '#1976D2'     // 深蓝
+                        },
+                        // 5. 关于 - 薰衣草紫（渐变终点）
+                        about: {
+                            primary: '#9C27B0',  // 薰衣草紫
+                            secondary: '#F3E5F5', // 浅紫白
+                            bg: '#FAF5FF',        // 极浅紫
+                            accent: '#7B1FA2'     // 深紫
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans SC"', 'system-ui', 'sans-serif'],
+                        serif: ['"Noto Serif SC"', 'serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'fade-in-up-slow': 'fadeInUp 1.2s ease-out forwards',
+                        'fade-in-up-delay': 'fadeInUp 1.5s ease-out forwards',
+                        'float-gentle': 'floatGentle 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        floatGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 引入抽离后的CSS文件 -->
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body class="font-sans text-dark overflow-x-hidden">
+    <!-- 导航栏：完全未动 -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-md border-b border-home-accent/20 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <!-- LOGO + 文字 组合超链接 -->
+                    <a href="#home" class="flex items-center">
+                        <img 
+                            src="./imgs/logo.jpg" 
+                            alt="言隅LOGO" 
+                            class="w-10 h-10 logo-circle border-2 border-home-accent shadow-sm transition-all duration-300 hover:border-home-primary"
+                        >
+                        <!-- LOGO右侧的"言隅"文字 -->
+                        <span class="ml-2 text-xl font-serif font-bold text-dark">言隅</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:block">
+                    <ul class="flex space-x-8 font-medium">
+                        <li><a href="#home" class="text-dark hover:text-dark transition-colors duration-300">首页</a></li>
+                        <li><a href="#intro" class="text-dark hover:text-intro-primary transition-colors duration-300">简介</a></li>
+                        <li><a href="#show" class="text-dark hover:text-show-primary transition-colors duration-300">展示</a></li>
+                        <li><a href="#project" class="text-dark hover:text-project-primary transition-colors duration-300">项目</a></li>
+                        <li><a href="#about" class="text-dark hover:text-about-primary transition-colors duration-300">关于</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-dark focus:outline-none transition-all duration-300 hover:text-dark" aria-label="菜单">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden bg-white py-4 px-4 border-t border-home-accent/20">
+            <ul class="space-y-4 font-medium">
+                <li><a href="#home" class="block py-2 hover:text-dark transition-colors duration-300">首页</a></li>
+                <li><a href="#intro" class="block py-2 hover:text-intro-primary transition-colors duration-300">简介</a></li>
+                <li><a href="#show" class="block py-2 hover:text-show-primary transition-colors duration-300">展示</a></li>
+                <li><a href="#project" class="block py-2 hover:text-project-primary transition-colors duration-300">项目</a></li>
+                <li><a href="#about" class="block py-2 hover:text-about-primary transition-colors duration-300">关于</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- 首页：完全未动（无背景色） -->
+        <section id="home" class="full-screen-section relative w-full flex items-center justify-center bg-cover bg-center" style="background-image: url('./imgs/background.jpg');">
+            <!-- 毛玻璃文字卡片 -->
+            <div class="relative z-10 glass-home px-12 py-16 sm:px-16 sm:py-20 max-w-xl mx-4 text-center">
+                <h1 class="text-[clamp(2.5rem,8vw,4rem)] font-serif font-bold mb-6 text-gray-800 animate-fade-in-up">言隅</h1>
+                <p class="text-[clamp(1rem,3vw,1.25rem)] mb-4 text-gray-700 opacity-95 animate-fade-in-up-slow" style="animation-delay: 0.3s">
+                    语言的故乡 · 珍藏乡音的角落
+                </p>
+                <p class="text-sm text-gray-600 opacity-90 animate-fade-in-up-delay mb-8" style="animation-delay: 0.6s">
+                    基于AI声音复刻的沉浸式方言文创IP
+                </p>
+                <a href="#intro" class="inline-block animate-float-gentle text-gray-700">
+                    <i class="fas fa-chevron-down text-xl opacity-80"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 简介模块：添加暖金黄浅背景 -->
+        <section id="intro" class="py-20 bg-intro-bg">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-center text-3xl font-serif font-bold text-intro-primary mb-12 scroll-animate">简介</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <div class="rounded-2xl overflow-hidden h-80 scroll-animate relative group shadow-lg shadow-intro-primary/10">
+                        <img src="./imgs/img1.jpg" alt="言隅IP形象" class="w-full h-full object-cover image-hover-zoom">
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm relative scroll-animate card-theme-intro border">
+                        <a href="#logo-detail" class="absolute top-6 right-6 w-6 h-6 rounded-full bg-intro-primary/10 flex items-center justify-center text-intro-primary hover:bg-intro-primary hover:text-white transition-all duration-300">
+                            <i class="fas fa-link text-xs"></i>
+                        </a>
+                        <h3 class="text-xl font-semibold text-dark mb-4">LOGO含义</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            黑色圆框如一方温润的「语言角落」，圈住乡音的边界；橙红色曲线是舒展的人形，也是流动的语调 — 一笔蜿蜒如长沙话的抑扬顿挫，像巷弄里的闲谈、饭桌上的吆喝，带着烟火气的鲜活与亲切。<br><br>
+                            圆框未闭合的缺口，象征着方言不被封闭、始终向时代敞开；「言隅」之名与图形呼应，既是「语言的故乡」，也是为每一种乡音留存的数字自留地，让长沙方言的韵律、乡愁的温度，在数字世界里有处可栖。
+                        </p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm relative scroll-animate card-theme-intro border">
+                        <a href="#ip-detail" class="absolute top-6 right-6 w-6 h-6 rounded-full bg-intro-primary/10 flex items-center justify-center text-intro-primary hover:bg-intro-primary hover:text-white transition-all duration-300">
+                            <i class="fas fa-link text-xs"></i>
+                        </a>
+                        <h3 class="text-xl font-semibold text-dark mb-4">IP言隅含义</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            “言隅”意为“语言的故乡”或“珍藏乡音的角落”。它描绘了这样一个意象：在飞速发展的时代洪流中，我们为每一种独特的方言、每一份质朴的乡愁，保留一个安心的、极具共情力的数字家园（目前聚焦于长沙‘湘’方言）。
+                        </p>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden h-80 scroll-animate relative group shadow-lg shadow-intro-primary/10">
+                        <img src="./imgs/img2.jpg" alt="长沙文旅场景" class="w-full h-full object-cover image-hover-zoom">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 展示模块：添加薄荷绿浅背景 -->
+        <section id="show" class="py-20 bg-show-bg">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-center text-3xl font-serif font-bold text-show-primary mb-12 scroll-animate">展示</h2>
+                
+                <div class="relative max-w-6xl mx-auto h-[480px] md:h-[520px] scroll-animate">
+                    <div id="card1" class="poker-card absolute top-0 left-0 w-[60%] md:w-[55%] h-full bg-white rounded-3xl shadow-lg overflow-hidden" style="transform: rotate(-2deg); z-index: 10; box-shadow: 0 10px 40px rgba(76, 175, 80, 0.15);">
+                        <a href="./html/design.html" class="block w-full h-full relative">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img3.jpg" alt="形象设计" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-8 text-white z-20">
+                                <h3 class="text-2xl font-bold mb-3">形象设计</h3>
+                                <p class="opacity-90 max-w-md">以长沙城市地标与湘方言文化为核心，打造「橘伢子」等系列IP形象，串联长沙千年历史与城市烟火气，构建完整的视觉IP体系。</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div id="card2" class="poker-card absolute top-0 left-1/2 -translate-x-1/2 w-[62%] md:w-[58%] h-full bg-white rounded-3xl shadow-xl overflow-hidden" style="z-index: 20; box-shadow: 0 15px 50px rgba(76, 175, 80, 0.2);">
+                        <a href="./html/product.html" class="block w-full h-full relative">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img4.jpg" alt="商品设计" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-8 text-white z-20">
+                                <h3 class="text-2xl font-bold mb-3">商品设计</h3>
+                                <p class="opacity-90 max-w-md">两大核心商品矩阵：NFC机关触发手环、可听盲盒公仔，将AI声音复刻技术与文创载体深度融合，打造可听、可戴、可玩的沉浸式文创产品。</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div id="card3" class="poker-card absolute top-0 right-0 w-[60%] md:w-[55%] h-full bg-white rounded-3xl shadow-lg overflow-hidden" style="transform: rotate(2deg); z-index: 10; box-shadow: 0 10px 40px rgba(76, 175, 80, 0.15);">
+                        <a href="./html/concept.html" class="block w-full h-full relative">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img5.jpg" alt="设计理念" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-8 text-white z-20">
+                                <h3 class="text-2xl font-bold mb-3">设计理念</h3>
+                                <p class="opacity-90 max-w-md">以「科技赋能非遗，创意激活传承」为核心，打破方言静态保护的局限，用潮玩化、游戏化的互动形式，让方言从博物馆走向大众，实现文化价值与商业价值的双向闭环。</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="md:hidden flex flex-col gap-6 mt-10">
+                    <div class="poker-card bg-white rounded-2xl overflow-hidden h-60 relative shadow-lg shadow-show-primary/15">
+                        <a href="./html/design.html" class="block w-full h-full">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img1.jpg" alt="形象设计" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-6 text-white z-20">
+                                <h3 class="text-xl font-bold">形象设计</h3>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="poker-card bg-white rounded-2xl overflow-hidden h-60 relative shadow-lg shadow-show-primary/15">
+                        <a href="./html/product.html" class="block w-full h-full">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img1.jpg" alt="商品设计" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-6 text-white z-20">
+                                <h3 class="text-xl font-bold">商品设计</h3>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="poker-card bg-white rounded-2xl overflow-hidden h-60 relative shadow-lg shadow-show-primary/15">
+                        <a href="./html/concept.html" class="block w-full h-full">
+                            <div class="absolute inset-0 z-0">
+                                <img src="./imgs/img1.jpg" alt="设计理念" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="absolute inset-0 z-10 gradient-mask"></div>
+                            <div class="absolute bottom-0 left-0 p-6 text-white z-20">
+                                <h3 class="text-xl font-bold">设计理念</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目模块：添加天空蓝浅背景 -->
+        <section id="project" class="py-20 bg-project-bg">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-center text-3xl font-serif font-bold text-project-primary mb-12 scroll-animate">项目</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="rounded-2xl overflow-hidden shadow-sm bg-white scroll-animate card-theme-project border">
+                        <a href="#project-value" class="block">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="./imgs/img6.jpg" alt="项目价值" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="p-8">
+                                <h3 class="text-xl font-semibold text-dark mb-4">项目价值</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    响应国家文化数字化与非遗活化战略，破解方言传承断层的行业痛点，开辟「声音文创」全新赛道。以AI技术为核心，实现湘方言的活态传承，同时赋能文旅产业升级，打造「保护-盈利-再传承」的可持续商业闭环，兼具文化价值、产业价值与社会价值。
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-sm bg-white scroll-animate card-theme-project border">
+                        <a href="#project-meaning" class="block">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="./imgs/img7.jpg" alt="项目意义" class="w-full h-full object-cover image-hover-zoom">
+                            </div>
+                            <div class="p-8">
+                                <h3 class="text-xl font-semibold text-dark mb-4">项目意义</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    打破方言保护的静态存档模式，用年轻化、潮流化的形式让方言重新走进大众生活，填补青少年方言认知空白，守护乡愁的情感纽带。同时以方言为载体，讲好长沙城市故事，推动湖湘文化的跨区域、跨文化传播，助力文化强国战略落地。
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于模块：添加薰衣草紫浅背景 -->
+        <section id="about" class="py-20 bg-about-bg">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-center text-3xl font-serif font-bold text-about-primary mb-12 scroll-animate">关于</h2>
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl p-10 shadow-sm scroll-animate card-theme-about border">
+                    <h3 class="text-xl font-semibold text-dark mb-6">其他事项</h3>
+                    <div class="space-y-4 text-gray-600 leading-relaxed">
+                        <p>本项目为湖南师范大学「金种子杯」「挑战杯」大学生创业大赛参赛项目，由湖南师范大学外国语学院、商学院、计算机学院、新闻与传播学院跨学科团队联合打造，特邀方言研究领域专家曾达之副教授担任指导老师。</p>
+                        <p>项目以长沙湘方言为起点，未来将逐步拓展至全国多方言区域，打造全国性的方言文创IP矩阵，成为中国声音文创标杆品牌。</p>
+                        <p>商务合作、IP授权、公益联动可通过官方渠道联系我们。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 尾部：修正文字颜色类名 -->
+        <section class="py-16 bg-dark text-white">
+            <div class="container mx-auto px-4 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <img 
+                        src="./imgs/logo.jpg" 
+                        alt="言隅LOGO" 
+                        class="w-20 h-20 logo-circle mx-auto mb-8 border-2 border-white shadow-sm"
+                    >
+                    <p class="text-xl font-serif mb-4">让方言「说话」，让城市「有声」</p>
+                    <p class="text-gray-400 mt-10">©2026 言隅 版权所有 | 基于AI声音复刻的沉浸式方言文创IP</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 引入抽离后的JS文件 -->
+    <script src="./js/index.js"></script>
+</body>
+</html>
